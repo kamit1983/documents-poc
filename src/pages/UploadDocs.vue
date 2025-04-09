@@ -1,10 +1,13 @@
 <template>
-    <div id="app">
+    <div id="app" style="max-width: 800px; margin: 0px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
       <h1>Document Integration POC</h1>
-      <DocumentConnect />
+      <DocumentConfiguration />
+      <DocumentUpload />
     </div>
   </template>
   
   <script setup>
-  import DocumentConnect from '../components/Document/DocumentConnect.vue'
-  </script>
+  import DocumentConfiguration from '../components/Document/DocumentConfiguration.vue'
+  import DocumentUpload from '../components/Document/DocumentUpload.vue'
+
+</script>

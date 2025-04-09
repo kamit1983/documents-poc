@@ -1,6 +1,6 @@
 <template>
   <div>
-    <nav>
+    <nav style="max-width: 800px; margin: 10px auto; padding: 20px; border: 1px solid #ccc; border-radius: 8px;">
       <button @click="$router.push('/docs')">Document Upload</button>
       <button @click="$router.push('/fingerprint')">Fingerprint Auth</button>
     </nav>
@@ -8,10 +8,10 @@
   </div>
 </template>
 
-<style scoped>./components/Document/DocumentConnect.vue
-nav {./components/FingerPrint/FingerprintRegistration.vue
-  margin-bottom: 20px;./components/FingerPrint/FingerprintLogin.vue
-}
+<style scoped>
+nav {
+   margin-bottom: 20px;
+ }
 button {
   margin-right: 10px;
   padding: 10px;
