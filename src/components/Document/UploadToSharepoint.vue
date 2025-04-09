@@ -8,7 +8,7 @@
   
   <script setup>
   import { ref } from 'vue';
-  import {useMsalAuth} from "../services/useMsalAuth" ;
+  import {useMsalAuth} from "../../services/useMsalAuth" ;
   
   const accessToken = ref(null);
   const { login } = useMsalAuth();
