@@ -6,5 +6,5 @@
   </template>
   
   <script setup>
-  import DocumentConnect from '../components/DocumentConnect.vue'
+  import DocumentConnect from '../components/Document/DocumentConnect.vue'
   </script>

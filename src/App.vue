@@ -8,9 +8,9 @@
   </div>
 </template>
 
-<style scoped>
-nav {
-  margin-bottom: 20px;
+<style scoped>./components/Document/DocumentConnect.vue
+nav {./components/FingerPrint/FingerprintRegistration.vue
+  margin-bottom: 20px;./components/FingerPrint/FingerprintLogin.vue
 }
 button {
   margin-right: 10px;

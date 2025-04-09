@@ -7,6 +7,6 @@
   </template>
   
   <script setup>
-  import FingerprintRegistration from '../components/FingerprintRegistration.vue';
-  import FingerprintLogin from '../components/FingerprintLogin.vue';
+  import FingerprintRegistration from '../components/FingerPrint/FingerprintRegistration.vue';
+  import FingerprintLogin from '../components/FingerPrint/FingerprintLogin.vue';
   </script>
