@@ -46,12 +46,14 @@ import { checkGDriveAuth, getGDriveProvider, updateGDriveProvider, deleteGDriveP
 const gdriveFolder = ref({})
 const gdriveEnabled = ref(false)
 const accessToken = ref(null);
+const API_KEY = ref(null);
 onMounted(async () => {
   try {
     const response = await getGDriveProvider();
     gdriveFolder.value = response.folder || {};
     gdriveEnabled.value = response.enabled; // assuming API returns `enabled`
     accessToken.value = response.tokens?.access_token;
+    API_KEY.value = response.API_KEY;
   } catch (error) {
     console.error('Failed to fetch GDrive provider:', error);
   }
@@ -74,7 +76,7 @@ const showPicker = (accessToken) => {
   const picker = new google.picker.PickerBuilder()
     .addView(view)
     .setOAuthToken(accessToken)
-    .setDeveloperKey("AIzaSyCcaDEDiCBmKiT9CG1x2ZMGlVPldBErxtg") // from Google Cloud Console
+    .setDeveloperKey(API_KEY.value) // from Google Cloud Console
     .setCallback(async (data) => {
       if (data.action === google.picker.Action.PICKED) {
         const response = await updateGDriveProvider({folder: {id: data.docs[0].id, name: data.docs[0].name}})
