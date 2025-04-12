@@ -1,13 +1,13 @@
 // services/GoogleDriveService.js
-
+const API_BASE_URL = "http://localhost:3000/api/gdrive"
 export async function checkGDriveAuth() {
-    const response = await fetch('http://localhost:3000/api/gdrive/auth/authurl');
+    const response = await fetch(`${API_BASE_URL}/auth/authurl`);
     const data = await response.json();
     return data;
   }
 
   export async function updateGDriveProvider(obj) {
-    const response = await fetch("http://localhost:3000/api/gdrive/provider", {
+    const response = await fetch(`${API_BASE_URL}/provider`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -19,7 +19,7 @@ export async function checkGDriveAuth() {
     return data;
   }
   export async function getGDriveProvider() {
-    const response = await fetch("http://localhost:3000/api/gdrive/provider", {
+    const response = await fetch(`${API_BASE_URL}/provider`, {
       method: "GET",
     });
   
@@ -27,7 +27,7 @@ export async function checkGDriveAuth() {
     return data;
   }
   export async function deleteGDriveProvider() {
-    const response = await fetch("http://localhost:3000/api/gdrive/provider", {
+    const response = await fetch(`${API_BASE_URL}/provider`, {
       method: "DELETE",
     });
   

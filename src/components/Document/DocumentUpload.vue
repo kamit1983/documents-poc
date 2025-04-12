@@ -44,8 +44,8 @@ onMounted(async () => {
     const data = await getGDriveProvider();
     gdriveProvider.value = {
       enabled: data.enabled,
-      access_token: data.tokens.access_token,
-      folder: data.folder
+      access_token: data.tokens?.access_token,
+      config: data.config
     };
   } catch (err) {
     console.error("Failed to load GDrive provider config", err);
@@ -79,7 +79,7 @@ const uploadToGDrive = async () => {
   const metadata = {
     name: file.name,
     mimeType: file.type,
-    parents: [gdriveProvider.value.folder?.id]
+    parents: [gdriveProvider.value.config?.folder?.id]
   };
 
   const form = new FormData();

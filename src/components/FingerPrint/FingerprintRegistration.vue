@@ -29,20 +29,19 @@
   
   const username = ref('');
   const status = ref('');
+  const API_URL = "http://127.0.0.1:8000/api/fingerprint";
   
   const registerFingerprint = async () => {
     status.value = 'Starting registration...';
   
     try {
       // 1. Fetch registration options
-      const res = await fetch('http://localhost:3000/api/fingerprint/generate-registration-options', {
+      const res = await fetch(`${API_URL}/generate-registration-options`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ username: username.value }),
       });
-  
       const optionsJSON = await res.json();
-  
       // 2. Call WebAuthn API
       const attResp = await startRegistration({ optionsJSON });
   
@@ -50,7 +49,7 @@
         status.value = '❌ Registration cancelled or failed.';
         return;
       } else {
-        const verificationResp = await fetch('http://localhost:3000/api/fingerprint/verify-registration', {
+        const verificationResp = await fetch(`${API_URL}/verify_registration`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',

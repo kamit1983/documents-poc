@@ -47,17 +47,18 @@ const gdriveFolder = ref({})
 const gdriveEnabled = ref(false)
 const accessToken = ref(null);
 const API_KEY = ref(null);
-onMounted(async () => {
+const getProvider = async () => {
   try {
     const response = await getGDriveProvider();
-    gdriveFolder.value = response.folder || {};
+    gdriveFolder.value = response.config?.folder || {};
     gdriveEnabled.value = response.enabled; // assuming API returns `enabled`
     accessToken.value = response.tokens?.access_token;
     API_KEY.value = response.API_KEY;
   } catch (error) {
     console.error('Failed to fetch GDrive provider:', error);
   }
-});
+}
+onMounted(getProvider);
 
 
 const loadPicker = () => {
@@ -79,8 +80,15 @@ const showPicker = (accessToken) => {
     .setDeveloperKey(API_KEY.value) // from Google Cloud Console
     .setCallback(async (data) => {
       if (data.action === google.picker.Action.PICKED) {
-        const response = await updateGDriveProvider({folder: {id: data.docs[0].id, name: data.docs[0].name}})
-        gdriveFolder.value = response.folder;
+        const response = await updateGDriveProvider({
+          config:{
+            folder: {
+              id: data.docs[0].id, 
+              name: data.docs[0].name
+            }
+          }
+        })
+        gdriveFolder.value = response.config.folder;
       }
     })
     .build();
@@ -90,14 +98,11 @@ const showPicker = (accessToken) => {
 async function generateGDriveToken() {
   const { authUrl } = await checkGDriveAuth();
   const popup = window.open(authUrl, '_blank', 'width=500,height=600');
-  const handleMessage = async (event) => {
-    if (event.origin !== "http://localhost:3000") return;
-    const { access_token } = event.data;
-    if (access_token) {
-      console.log("Received token:", access_token);
-      accessToken.value = access_token;
-      window.removeEventListener('message', handleMessage);
-    }
+  const handleMessage = (event) => {
+    if (event.origin !== "http://localhost:3000") return; 
+    console.log("handleMessage");
+    getProvider()
+    window.removeEventListener('message', handleMessage);
   };
   window.addEventListener('message', handleMessage);
 }
