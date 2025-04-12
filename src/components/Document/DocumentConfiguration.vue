@@ -99,12 +99,21 @@ async function generateGDriveToken() {
   const { authUrl } = await checkGDriveAuth();
   const popup = window.open(authUrl, '_blank', 'width=500,height=600');
   const handleMessage = (event) => {
-    if (event.origin !== "http://localhost:3000") return; 
+    if (event.origin !== "http://localhost:5173") return; 
     console.log("handleMessage");
     getProvider()
     window.removeEventListener('message', handleMessage);
   };
   window.addEventListener('message', handleMessage);
+  const popupInterval = setInterval(() => {
+  if (popup && popup.closed) {
+    getProvider()
+    clearInterval(popupInterval);
+    window.removeEventListener('message', handleMessage);
+    console.log("Popup window closed");
+    // You can trigger a refresh, notify the user, etc.
+  }
+}, 500);
 }
 async function selectGdriveFolder() {
   await loadPicker();
