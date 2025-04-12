@@ -41,7 +41,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { checkGDriveAuth, getGDriveProvider, updateGDriveProvider, deleteGDriveProvider } from "@/services/GoogleDriveService";
-
+const gdriveProvider = 'gdrive';
 // GDrive State
 const gdriveFolder = ref({})
 const gdriveEnabled = ref(false)
@@ -49,7 +49,7 @@ const accessToken = ref(null);
 const API_KEY = ref(null);
 const getProvider = async () => {
   try {
-    const response = await getGDriveProvider();
+    const response = await getGDriveProvider(gdriveProvider);
     gdriveFolder.value = response.config?.folder || {};
     gdriveEnabled.value = response.enabled; // assuming API returns `enabled`
     accessToken.value = response.tokens?.access_token;
@@ -87,7 +87,7 @@ const showPicker = (accessToken) => {
               name: data.docs[0].name
             }
           }
-        })
+        }, gdriveProvider)
         gdriveFolder.value = response.config.folder;
       }
     })
@@ -96,7 +96,7 @@ const showPicker = (accessToken) => {
   picker.setVisible(true);
 };
 async function generateGDriveToken() {
-  const { authUrl } = await checkGDriveAuth();
+  const { authUrl } = await checkGDriveAuth(gdriveProvider);
   const popup = window.open(authUrl, '_blank', 'width=500,height=600');
   const handleMessage = (event) => {
     if (event.origin !== "http://localhost:5173") return; 
@@ -120,13 +120,13 @@ async function selectGdriveFolder() {
   showPicker(accessToken.value);
 }
 async function deleteGDriveConfig() {
-  await deleteGDriveProvider();
+  await deleteGDriveProvider(gdriveProvider);
   gdriveFolder.value = {};
   accessToken.value = null;
   gdriveEnabled.value = false;
 }
 async function toggleGDriveEnabled() {
-  const response = await updateGDriveProvider({enabled: !gdriveEnabled.value});
+  const response = await updateGDriveProvider({enabled: !gdriveEnabled.value}, gdriveProvider);
   gdriveEnabled.value = response.enabled;
 }
 

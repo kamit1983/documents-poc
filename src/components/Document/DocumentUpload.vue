@@ -41,7 +41,7 @@ const isUploading = ref(false);
 
 onMounted(async () => {
   try {
-    const data = await getGDriveProvider();
+    const data = await getGDriveProvider('gdrive');
     gdriveProvider.value = {
       enabled: data.enabled,
       access_token: data.tokens?.access_token,
