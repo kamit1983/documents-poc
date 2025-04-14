@@ -20,20 +20,21 @@
     </section>
 
     <!-- SharePoint Section -->
-    <!-- <section class="provider-section">
+    <section class="provider-section">
       <h3>📁 SharePoint</h3>
-      <p><strong>Token Status:</strong> {{ sharepointTokenGenerated ? '✅ Generated' : '❌ Not Generated' }}</p>
+      <p><strong>Token Status:</strong> {{ sharepointAccessToken ? '✅ Generated' : '❌ Not Generated' }}</p>
       <p><strong>Selected Folder:</strong> {{ sharepointFolder || 'No folder selected' }}</p>
       <p><strong>Provider Status:</strong> {{ sharepointEnabled ? '🟢 Enabled' : '🔴 Disabled' }}</p>
 
       <div class="actions">
         <button @click="generateSharepointToken">Generate Token</button>
+        <button @click="null" :disabled="!sharepointAccessToken" class="disabled">Select Folder</button>
         <button @click="deleteSharepointConfig" class="secondary">Delete Config</button>
         <button @click="toggleSharepointEnabled" class="toggle">
           {{ sharepointEnabled ? 'Disable' : 'Enable' }}
         </button>
       </div>
-    </section> -->
+    </section>
   </div>
 </template>
 
@@ -45,11 +46,18 @@ import { checkGDriveAuth, getGDriveProvider, updateGDriveProvider, deleteGDriveP
 
 const route = useRoute()
 const gdriveProvider = 'gdrive';
+const sharepointProvider = 'sharepoint'
 // GDrive State
 const gdriveFolder = ref({})
 const gdriveEnabled = ref(false)
 const accessToken = ref(null);
 const API_KEY = ref(null);
+
+// Sharepoint state
+const sharepointAccessToken = ref(null);
+const sharepointFolder = ref({});
+const sharepointEnabled = ref(false)
+
 const getProvider = async () => {
   try {
     const status = route.query.status
@@ -67,7 +75,20 @@ const getProvider = async () => {
     console.error('Failed to fetch GDrive provider:', error);
   }
 }
-onMounted(getProvider);
+const getSharepointProvider = async () => {
+  try {
+    const response = await getGDriveProvider(sharepointProvider);
+    sharepointFolder.value = response.config?.folder || {};
+    sharepointEnabled.value = response.enabled; // assuming API returns `enabled`
+    sharepointAccessToken.value = response.tokens?.access_token;
+  } catch (error) {
+    console.error('Failed to fetch Sharepoint provider:', error);
+  }
+}
+onMounted(()=> {
+  getProvider();
+  getSharepointProvider();
+});
 
 
 const loadPicker = () => {
@@ -141,13 +162,10 @@ async function toggleGDriveEnabled() {
 }
 
 // SharePoint State
-const sharepointTokenGenerated = ref(false)
-const sharepointFolder = ref('')
-const sharepointEnabled = ref(false)
 
-function generateSharepointToken() {
-  sharepointTokenGenerated.value = true
-  sharepointFolder.value = 'Sites/SharedDocuments'
+async function generateSharepointToken() {
+  const { authUrl } = await checkGDriveAuth(sharepointProvider);
+  window.location.href = authUrl;
 }
 function deleteSharepointConfig() {
   sharepointTokenGenerated.value = false

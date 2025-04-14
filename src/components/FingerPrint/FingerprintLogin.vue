@@ -23,8 +23,7 @@
   <script setup lang="ts">
   import { startAuthentication } from "@simplewebauthn/browser";
   import { ref } from 'vue';
-  const API_URL = "http://127.0.0.1:8000/api/fingerprint";
-  const API_URL1 = "http://127.0.0.1:3000/api/fingerprint";
+  const API_URL = "http://127.0.0.1:3000/api/fingerprint";
   
   const username = ref('');
   const status = ref('');
